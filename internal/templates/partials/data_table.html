@@ -1,0 +1,60 @@
+{{define "data_table"}}
+<div class="card-header">
+  <i class="fas fa-list me-1"></i>
+  {{.table_title}}
+</div>
+<div class="card-body">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="align-middle">№</th>
+        {{range .table_headers}}
+        <th class="align-middle">{{.}}</th>
+        {{end}}
+        <th class="col-2 align-middle"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{$n := 1}}
+      {{range $entity := .table_data}}
+      <tr>
+        <td class="align-middle">{{$n}}</td>
+        {{range getFieldsValue $entity}}
+        <td class="align-middle">{{.}}</td>
+        {{end}}
+        {{if eq $.table_type "function"}}
+        <td class="text-end">
+          <button type="button" class="btn btn-primary" data-toggle="modal" style="min-width: 46px;"><i
+              class="fa fa-pencil fa-wrench"></i>
+        </td>
+        {{else if eq $.table_type "data"}}
+        <td class="text-end">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDialog"
+            onclick="preparePeerEditDialog('{{getFieldsValue $entity}}')" style="min-width: 46px;"><i
+              class="fa fa-pencil fa-fw"></i>
+          </button>
+          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteDialog"
+            onclick="$('#delDialogEntityID').val('{{$entity.ID}}')" style="min-width: 46px;"><i class="fas fa-trash"></i>
+          </button>
+        </td>
+        {{else}}
+        <!-- // TODO -->
+        {{end}}
+      </tr>
+      {{$n = add $n 1}}
+      {{end}}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function preparePeerEditDialog(data) {
+    data = data.replace(/^\[+|\]+$/g, '');
+    let data_array = data.split(" ");
+    let inputs = $("#editDialog input");
+    inputs.each(function (i, elem) {
+      elem.value = data_array[i + 1];
+    })
+  }
+</script>
+{{end}}

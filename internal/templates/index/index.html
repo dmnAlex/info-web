@@ -1,0 +1,33 @@
+{{define "index"}}
+{{template "top" .}}
+{{template "nav_bar" .}}
+<div id="layoutSidenav">
+  {{template "index_sidebar" .}}
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid p-5">
+        <h1 class="display-4">Info21_v2.0_Web_Go</h1>
+        <p class="lead">Web-приложение на базе фреймворка Gin с использованием PostgreSQL и Bootstrap</p>
+        <hr class="my-4">
+        <h3>Поддерживает</h3>
+        <ul>
+          <li>Рендеринг страниц сервером</li>
+          <li>CRUD-операций</li>
+          <li>Импорт/экспорт таблиц из файлов/в файлы с расширением <i>.csv</i></li>
+          <li>SQL-запросы к базе данных через графический интерфейс</li>
+          <li>Логирование действий пользователя</li>
+        </ul>
+        <div class="mt-5">
+          <h3>Разработчики</h3>
+          <ul>
+            <li><a class="link" href="https://github.com/dmnAlex">hsensor</a></li>
+            <li><a class="link" href="https://github.com/dsnikitin">wmicha</a></li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    {{template "footer" .}}
+  </div>
+</div>
+{{template "bottom" .}}
+{{end}}

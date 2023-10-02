@@ -1,0 +1,15 @@
+ID,Peer,RecommendedPeer
+1,wmicha,hsensor
+2,wmicha,hmetallo
+3,wmicha,dpaleo
+4,wmicha,afate
+5,hsensor,dpaleo
+6,hsensor,eamiee
+7,hmetallo,eamiee
+8,hmetallo,dclaudet
+9,eamiee,ccassell
+10,dclaudet,ccassell
+11,dclaudet,aglendon
+12,dpaleo,eamiee
+13,dpaleo,dclaudet
+14,afate,dclaudet

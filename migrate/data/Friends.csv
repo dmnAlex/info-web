@@ -1,0 +1,13 @@
+ID,Peer1,Peer2
+1,wmicha,hsensor
+2,wmicha,hmetallo
+3,hsensor,hmetallo
+4,wmicha,dpaleo
+5,hsensor,dpaleo
+6,hmetallo,dpaleo
+7,afate,eamiee
+8,eamiee,dclaudet
+9,eamiee,alayna
+10,dclaudet,alayna
+11,aglendon,alayna
+12,hsensor,aglendon

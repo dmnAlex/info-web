@@ -1,0 +1,56 @@
+{{define "add_dialog"}}
+<div class="modal fade" id="addDialog" tabindex="-1" role="dialog" aria-labelledby="addDialogTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDialogCenterTitle">Добавление записи</h5>
+      </div>
+      <div class="modal-body">
+        {{$i := 1}}
+        {{range .object_fields}}
+        <div class="form-floating mb-3">
+          <input class="form-control" id="ad{{.}}" name="{{.}}" type="text" placeholder="{{index $.table_headers $i}}">
+          <label for="ad{{.}}">{{index $.table_headers $i}}</label>
+        </div>
+        {{$i = add $i 1}}
+        {{end}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Отменить</button>
+        <button type="button" class="btn btn-primary" style="min-width: 118px;"
+          onclick="sendAddRequest('{{.endpoint}}')">Добавить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function sendAddRequest(url) {
+    const inputs = $("#addDialog input");
+    const map = new Map()
+    inputs.each((i, elem) => {
+      map.set(elem.getAttribute('name'), elem.value)
+    })
+    const obj = Object.fromEntries(map)
+
+    jQuery.ajax({
+      url: url,
+      method: 'POST',
+      dataType: 'html',
+      data: obj,
+      success: function (data, textStatus, jqXHR) {
+        if (jqXHR.status === 200) {
+          $('#dataTable').html(data);
+          $('#addDialog').modal('hide');
+          inputs.each((i, elem) => {
+            elem.value = ""
+          })
+        } else if (jqXHR.status !== 200) {
+          $('#errorDialog').html(data);
+          $('#errorDialog').modal('show');
+        }
+      },
+    });
+  }
+</script>
+{{end}}

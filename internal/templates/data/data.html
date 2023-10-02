@@ -1,0 +1,25 @@
+{{define "data"}}
+
+{{template "top" .}}
+{{template "nav_bar" .}}
+<div id="layoutSidenav">
+  {{template "data_sidebar" .}}
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid p-5">
+        <h1 class="display-4">Данные</h1>
+        <ol class="breadcrumb mb-4">
+          <li class="breadcrumb-item"><a href="/">Главная</a></li>
+          <li class="breadcrumb-item active">Данные</li>
+        </ol>
+        <hr class="my-4">
+        <!-- текстовый контент -->
+        <p>какое-то описание...</p>
+      </div>
+    </main>
+    {{template "footer" .}}
+  </div>
+</div>
+{{template "bottom" .}}
+
+{{end}}

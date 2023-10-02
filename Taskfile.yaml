@@ -1,0 +1,23 @@
+version: '3'
+
+env:
+  BUILD_DIR: build
+
+tasks:
+  run:
+    desc: Run the application during development.
+    cmds:
+      - go run ./cmd/info-web
+  build:
+    desc: Build the application
+    cmds:
+      - go build -o '{{.BUILD_DIR}}'/ ./cmd/info-web
+  clean:
+    desc: Clean build files.
+    cmds:
+      - rm -rf '{{.BUILD_DIR}}'
+  migrate:
+    desc: Migrate database.
+    dir: migrate
+    cmds:
+      - ./migrate.sh

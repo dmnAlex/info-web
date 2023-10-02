@@ -1,0 +1,61 @@
+{{define "edit_dialog"}}
+<div class="modal fade" id="editDialog" tabindex="-1" role="dialog" aria-labelledby="editDialogTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editDialogCenterTitle">Изменение</h5>
+      </div>
+      <div class="modal-body">
+        {{$i := 1}}
+        {{range .object_fields}}
+        {{if eq $i 1}}
+        <div class="form-floating mb-3">
+          <input class="form-control" id="ed{{.}}" name="{{.}}" type="text" disabled>
+          <label for="ed{{.}}">{{index $.table_headers $i}}</label>
+        </div>
+        {{else}}
+        <div class="form-floating mb-3">
+          <input class="form-control" id="ed{{.}}" name="{{.}}" type="text">
+          <label for="ed{{.}}">{{index $.table_headers $i}}</label>
+        </div>
+        {{end}}
+        {{$i = add $i 1}}
+        {{end}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Отменить</button>
+        <button type="button" class="btn btn-primary" style="min-width: 118px;"
+          onclick="sendUpdatePeerRequest('{{.endpoint}}')">Изменить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function sendUpdatePeerRequest(url) {
+    let inputs = $("#editDialog input");
+    let map = new Map()
+    inputs.each(function (i, elem) {
+      map.set(elem.getAttribute('name'), elem.value)
+    })
+    const obj = Object.fromEntries(map)
+
+    jQuery.ajax({
+      url: url,
+      method: 'PUT',
+      dataType: 'html',
+      data: obj,
+      success: function (data, textStatus, jqXHR) {
+        if (jqXHR.status === 200) {
+          $('#dataTable').html(data);
+          $('#editDialog').modal('hide');
+        } else if (jqXHR.status !== 200) {
+          $('#errorDialog').html(data);
+          $('#errorDialog').modal('show');
+        }
+      },
+    });
+  }
+</script>
+{{end}}

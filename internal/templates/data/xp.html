@@ -1,0 +1,38 @@
+{{define "xp"}}
+{{template "top" .}}
+{{template "add_dialog" .}}
+{{template "edit_dialog" .}}
+{{template "delete_dialog" .}}
+{{template "nav_bar" .}}
+<div id="layoutSidenav">
+  {{template "data_sidebar" .}}
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid p-5">
+        <h1 class="display-4">Опыт</h1>
+        <ol class="breadcrumb mb-4">
+          <li class="breadcrumb-item"><a href="/">Главная</a></li>
+          <li class="breadcrumb-item"><a href="/data">Данные</a></li>
+          <li class="breadcrumb-item active">Опыт</li>
+        </ol>
+        <hr class="my-4">
+        <div class="text-end mb-2">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDialog"
+            style="min-width: 118px;">
+            <i class="fas fa-plus"></i> Добавить
+          </button>
+          {{template "load_buttons" .}}
+        </div>
+        <div id="dataTable" class="table-responsive card mb-4">
+          {{template "data_table" .}}
+        </div>
+      </div>
+    </main>
+    {{template "footer" .}}
+  </div>
+</div>
+<div class="modal fade" id="errorDialog" tabindex="-1" role="dialog" aria-labelledby="errorDialogCenterTitle"
+  aria-hidden="true">
+</div>
+{{template "bottom" .}}
+{{end}}

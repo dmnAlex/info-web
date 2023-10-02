@@ -1,0 +1,23 @@
+{{ define "index_sidebar" }}
+<div id="layoutSidenav_nav">
+  <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+    <div class="sb-sidenav-menu">
+      <div class="nav">
+        <div class="sb-sidenav-menu-heading">Разделы</div>
+        <a class="nav-link" href="/data">
+          <div class="sb-nav-link-icon"><i class="fas fa-database"></i></div>
+          Данные
+        </a>
+        <a class="nav-link" href="/operations">
+          <div class="sb-nav-link-icon"><i class="fa fa-tasks"></i></div>
+          SQL-запросы
+        </a>
+      </div>
+    </div>
+    <div class="sb-sidenav-footer">
+      <div class="small">Вы вошли как:</div>
+      Админ
+    </div>
+  </nav>
+</div>
+{{end}}
