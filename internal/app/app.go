@@ -4,13 +4,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"reflect"
 
 	"html/template"
 
 	"github.com/dsnikitin/info-web/internal/controller/http"
 	"github.com/dsnikitin/info-web/internal/entity"
 	"github.com/dsnikitin/info-web/internal/infrastructure/repository"
+	"github.com/dsnikitin/info-web/internal/pkg/tools"
 	"github.com/dsnikitin/info-web/internal/usecase"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
@@ -96,8 +96,7 @@ func initRepositories(db *gorm.DB) *Repositories {
 }
 
 func ConnectToDB() (*gorm.DB, error) {
-	dsn := "host=localhost port=5432 user=postgres password=postgres dbname=postgres"
-	return gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	return gorm.Open(postgres.Open("sslmode=disable"), &gorm.Config{})
 }
 
 func initUseCases(rs *Repositories) *UseCases {
@@ -147,35 +146,13 @@ func initTemplates(gin *gin.Engine) {
 	}
 
 	gin.SetFuncMap(template.FuncMap{
-		"add":            add,
-		"getFieldsValue": getFieldsValue,
+		"add":                tools.Add,
+		"getFieldValues":     tools.GetFieldValues,
+		"getPrimaryKeyValue": tools.GetPrimaryKeyValue,
 	})
 	gin.LoadHTMLFiles(templates...)
 	gin.Static("/internal/assets", "internal/assets")
 
-}
-
-func add(a int, b int) int {
-	return a + b
-}
-
-// returns the value of each field of struct in a slice
-func getFieldsValue(s interface{}) []interface{} {
-	if s == nil {
-		return nil
-	}
-
-	v := reflect.ValueOf(s)
-	if v.Kind() != reflect.Struct {
-		return nil
-	}
-
-	out := make([]interface{}, 0, v.NumField())
-	for i := 0; i < v.NumField(); i++ {
-		out = append(out, v.Field(i).Interface())
-	}
-
-	return out
 }
 
 func initRoutes(e *gin.Engine, h *Handlers) {

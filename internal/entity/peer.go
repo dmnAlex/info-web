@@ -1,7 +1,10 @@
 package entity
 
 type Peer struct {
-	ID       uint64 `json:"id" form:"id" csv:"id" gorm:"primaryKey"`
-	Nickname string `json:"nickname" form:"nickname" csv:"nickname"`
+	Nickname string `json:"nickname" form:"nickname" csv:"nickname" gorm:"primaryKey"`
 	Birthday string `json:"birthday" form:"birthday" csv:"birthday"`
+}
+
+func (Peer) GetRussianFieldNames() []string {
+	return []string{"Ник", "Дата рождения"}
 }

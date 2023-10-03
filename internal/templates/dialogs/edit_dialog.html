@@ -7,17 +7,19 @@
         <h5 class="modal-title" id="editDialogCenterTitle">Изменение</h5>
       </div>
       <div class="modal-body">
-        {{$i := 1}}
-        {{range .object_fields}}
-        {{if eq $i 1}}
+        {{$i := 0}}
+        {{range $field := .object_fields}}
+        {{if eq $field "id"}}
+        <input type="hidden" name="id" value="">
+        {{else if eq $i 0}}
         <div class="form-floating mb-3">
-          <input class="form-control" id="ed{{.}}" name="{{.}}" type="text" disabled>
-          <label for="ed{{.}}">{{index $.table_headers $i}}</label>
+          <input class="form-control" id="ed{{$field}}" name="{{$field}}" type="text" disabled>
+          <label for="ed{{$field}}">{{index $.table_headers $i}}</label>
         </div>
         {{else}}
         <div class="form-floating mb-3">
-          <input class="form-control" id="ed{{.}}" name="{{.}}" type="text">
-          <label for="ed{{.}}">{{index $.table_headers $i}}</label>
+          <input class="form-control" id="ed{{$field}}" name="{{$field}}" type="text">
+          <label for="ed{{$field}}">{{index $.table_headers $i}}</label>
         </div>
         {{end}}
         {{$i = add $i 1}}
@@ -48,6 +50,7 @@
       data: obj,
       success: function (data, textStatus, jqXHR) {
         if (jqXHR.status === 200) {
+          console.log(data)
           $('#dataTable').html(data);
           $('#editDialog').modal('hide');
         } else if (jqXHR.status !== 200) {

@@ -183,16 +183,16 @@ END;
 $$;
 
 
-CALL prc_import_from_csv ('Peers', :common_path || 'Peers.csv', ',');
-CALL prc_import_from_csv ('Tasks', :common_path || 'Tasks.csv', ',');
-CALL prc_import_from_csv ('Checks', :common_path || 'Checks.csv', ',');
-CALL prc_import_from_csv ('Friends', :common_path || 'Friends.csv', ',');
-CALL prc_import_from_csv ('P2P', :common_path || 'P2P.csv', ',');
-CALL prc_import_from_csv ('Recommendations', :common_path || 'Recommendations.csv', ',');
-CALL prc_import_from_csv ('TimeTracking', :common_path || 'TimeTracking.csv', ',');
-CALL prc_import_from_csv ('TransferredPoints', :common_path || 'TransferredPoints.csv', ',');
-CALL prc_import_from_csv ('Verter', :common_path || 'Verter.csv', ',');
-CALL prc_import_from_csv ('XP', :common_path || 'XP.csv', ',');
+CALL prc_import_from_csv ('Peers', :data_path || '/data/Peers.csv', ',');
+CALL prc_import_from_csv ('Tasks', :data_path || '/data/Tasks.csv', ',');
+CALL prc_import_from_csv ('Checks', :data_path || '/data/Checks.csv', ',');
+CALL prc_import_from_csv ('Friends', :data_path || '/data/Friends.csv', ',');
+CALL prc_import_from_csv ('P2P', :data_path || '/data/P2P.csv', ',');
+CALL prc_import_from_csv ('Recommendations', :data_path || '/data/Recommendations.csv', ',');
+CALL prc_import_from_csv ('TimeTracking', :data_path || '/data/TimeTracking.csv', ',');
+CALL prc_import_from_csv ('TransferredPoints', :data_path || '/data/TransferredPoints.csv', ',');
+CALL prc_import_from_csv ('Verter', :data_path || '/data/Verter.csv', ',');
+CALL prc_import_from_csv ('XP', :data_path || '/data/XP.csv', ',');
 
 -- Import
 DO $$

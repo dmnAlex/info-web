@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/dsnikitin/info-web/internal/entity"
+	"github.com/dsnikitin/info-web/internal/pkg/tools"
 	"github.com/gin-gonic/gin"
 )
 
@@ -70,105 +71,106 @@ func (d *DataSubsection[E]) DeleteEntity(ctx *gin.Context) {
 }
 
 func (d *DataSubsection[E]) preparePageContent(entities []E) (template string, ginMap *gin.H) {
-	switch any(entities[0]).(type) {
+	var e E
+	switch any(e).(type) {
 	case entity.Peer:
 		template = peersTemplate
 		ginMap = &gin.H{
 			"endpoint":      peersEndpoint,
-			"object_fields": []string{"nickname", "birthday"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Студенты",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник", "Дата рождения"},
+			"table_headers": any(e).(entity.Peer).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Friends:
 		template = friendsTemplate
 		ginMap = &gin.H{
 			"endpoint":      friendsEndpoint,
-			"object_fields": []string{"peer_1", "peer_2"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Друзья",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Ник друга"},
+			"table_headers": any(e).(entity.Friends).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Recommendations:
 		template = recommendationsTemplate
 		ginMap = &gin.H{
 			"endpoint":      recommendationsEndpoint,
-			"object_fields": []string{"peer", "recommended_peer"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Рекоммендации",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Ник рекоммендуемого"},
+			"table_headers": any(e).(entity.Recommendations).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Task:
 		template = tasksTemplate
 		ginMap = &gin.H{
 			"endpoint":      tasksEndpoint,
-			"object_fields": []string{"title", "parent_task", "max_xp"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Задания",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Название", "Родительское задание", "Максимальный опыт"},
+			"table_headers": any(e).(entity.Task).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.XP:
 		template = xpTemplate
 		ginMap = &gin.H{
 			"endpoint":      xpEndpont,
-			"object_fields": []string{"check_id", "xp_amount"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Опыт",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "ID проверки", "Количество опыта"},
+			"table_headers": any(e).(entity.XP).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Points:
 		template = pointsTemplate
 		ginMap = &gin.H{
 			"endpoint":      pointsEndpoint,
-			"object_fields": []string{"checking_peer", "checked_peer", "points_amount"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Полученные поинты",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Проверяющий", "Проверяемый", "Количество поинтов"},
+			"table_headers": any(e).(entity.Points).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Check:
 		template = checksTemplate
 		ginMap = &gin.H{
 			"endpoint":      checksEndpoint,
-			"object_fields": []string{"peer", "task", "date"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Провероки",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Название задания", "Дата проверки"},
+			"table_headers": any(e).(entity.Check).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.P2P:
 		template = p2pTemplate
 		ginMap = &gin.H{
 			"endpoint":      p2pEndpoint,
-			"object_fields": []string{"check_id", "checking_peer", "state", "time"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Проверки p2p",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "ID проверки", "Ник проверяющего", "Статус проверки", "Время"},
+			"table_headers": any(e).(entity.P2P).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Verter:
 		template = verterTemplate
 		ginMap = &gin.H{
 			"endpoint":      verterEndpoint,
-			"object_fields": []string{"checking_id", "state", "time"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Проверок вертера",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "ID проверки", "Статус проверки", "Время"},
+			"table_headers": any(e).(entity.Verter).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.TimeTracking:
 		template = timeTrackingTemplate
 		ginMap = &gin.H{
 			"endpoint":      timeTrackingEndpoint,
-			"object_fields": []string{"peer", "date", "time", "state"},
+			"object_fields": tools.GetFieldNames(e),
 			"table_title":   "Посещения",
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Дата", "Время", "Статус"},
+			"table_headers": any(e).(entity.TimeTracking).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	}
@@ -177,65 +179,66 @@ func (d *DataSubsection[E]) preparePageContent(entities []E) (template string, g
 }
 
 func (d *DataSubsection[E]) prepareTableContent(entities []E) (ginMap *gin.H) {
-	switch any(entities[0]).(type) {
+	var e E
+	switch any(e).(type) {
 	case entity.Peer:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник", "Дата рождения"},
+			"table_headers": any(e).(entity.Peer).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Friends:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Ник друга"},
+			"table_headers": any(e).(entity.Friends).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Recommendations:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Ник рекоммендуемого"},
+			"table_headers": any(e).(entity.Recommendations).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Task:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Название", "Родительское задание", "Максимальный опыт"},
+			"table_headers": any(e).(entity.Task).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.XP:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "ID проверки", "Количество опыта"},
+			"table_headers": any(e).(entity.XP).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Points:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Проверяющий", "Проверяемый", "Количество поинтов"},
+			"table_headers": any(e).(entity.Points).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Check:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Название задания", "Дата проверки"},
+			"table_headers": any(e).(entity.Check).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.P2P:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "ID проверки", "Ник проверяющего", "Статус проверки", "Время"},
+			"table_headers": any(e).(entity.P2P).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.Verter:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "ID проверки", "Статус проверки", "Время"},
+			"table_headers": any(e).(entity.Verter).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	case entity.TimeTracking:
 		ginMap = &gin.H{
 			"table_data":    entities,
-			"table_headers": []string{"ID", "Ник студента", "Дата", "Время", "Статус"},
+			"table_headers": any(e).(entity.TimeTracking).GetRussianFieldNames(),
 			"table_type":    "data",
 		}
 	}

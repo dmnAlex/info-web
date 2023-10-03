@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/dsnikitin/info-web/internal/entity"
+	"github.com/dsnikitin/info-web/internal/pkg/tools"
 	"gorm.io/gorm"
 )
 
@@ -10,8 +11,8 @@ type DataManager[E entity.Entity] struct {
 }
 
 func NewDataManager[E entity.Entity](db *gorm.DB) *DataManager[E] {
-	var entity E
-	db.AutoMigrate(entity)
+	var e E
+	db.AutoMigrate(e)
 	return &DataManager[E]{db: db}
 }
 
@@ -24,9 +25,9 @@ func (r *DataManager[E]) Create(e *E) error {
 }
 
 func (r *DataManager[E]) ReadAll() []E {
-	var entities []E
-	r.db.Find(&entities)
-	return entities
+	var es []E
+	r.db.Find(&es)
+	return es
 }
 
 func (r *DataManager[E]) Update(e *E) {
@@ -34,6 +35,6 @@ func (r *DataManager[E]) Update(e *E) {
 }
 
 func (r *DataManager[E]) Delete(id string) {
-	var entity E
-	r.db.Delete(entity, id)
+	var e E
+	r.db.Where(tools.GetPrimaryKeyName(e)+" = ?", id).Delete(e)
 }

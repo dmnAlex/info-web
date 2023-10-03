@@ -2,6 +2,10 @@ package entity
 
 type Friends struct {
 	ID    uint64 `json:"id" form:"id" csv:"id" gorm:"primaryKey"`
-	Peer1 string `json:"peer_1" form:"peer_1" csv:"peer_1"`
-	Peer2 string `json:"peer_2" form:"peer_2" csv:"peer_2"`
+	Peer1 string `json:"peer1" form:"peer1" csv:"peer1"`
+	Peer2 string `json:"peer2" form:"peer2" csv:"peer2"`
+}
+
+func (Friends) GetRussianFieldNames() []string {
+	return []string{"ID", "Ник студента", "Ник друга"}
 }

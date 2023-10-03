@@ -10,6 +10,7 @@ const (
 	dataEndPoint = "/data"
 	dataTemplate = "data"
 
+	// subsections
 	peersEndpoint           = dataEndPoint + "/peers"
 	peersTemplate           = "peers"
 	friendsEndpoint         = dataEndPoint + "/friends"
@@ -31,6 +32,7 @@ const (
 	timeTrackingEndpoint    = dataEndPoint + "/time_tracking"
 	timeTrackingTemplate    = "time_tracking"
 
+	// common
 	tableTemplate     = "data_table"
 	errDialogTemplate = "error_dialog"
 )

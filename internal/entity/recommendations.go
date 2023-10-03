@@ -3,5 +3,9 @@ package entity
 type Recommendations struct {
 	ID              uint64 `json:"id" form:"id" csv:"id" gorm:"primaryKey"`
 	Peer            string `json:"peer" form:"peer" csv:"peer"`
-	RecommendedPeer string `json:"recommended_peer" form:"recommended_peer" csv:"recommended_peer" gorm:"column:recommendedpeer"`
+	RecommendedPeer string `json:"recommendedpeer" form:"recommendedpeer" csv:"recommendedpeer" gorm:"column:recommendedpeer"`
+}
+
+func (Recommendations) GetRussianFieldNames() []string {
+	return []string{"ID", "Ник студента", "Ник рекоммендуемого"}
 }

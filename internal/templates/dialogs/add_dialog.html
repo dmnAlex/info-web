@@ -6,12 +6,15 @@
         <h5 class="modal-title" id="addDialogCenterTitle">Добавление записи</h5>
       </div>
       <div class="modal-body">
-        {{$i := 1}}
-        {{range .object_fields}}
+        {{$i := 0}}
+        {{range $field := .object_fields}}
+        {{ if ne $field "id"}}
         <div class="form-floating mb-3">
-          <input class="form-control" id="ad{{.}}" name="{{.}}" type="text" placeholder="{{index $.table_headers $i}}">
-          <label for="ad{{.}}">{{index $.table_headers $i}}</label>
+          <input class="form-control" id="ad{{$field}}" name="{{$field}}" type="text"
+            placeholder="{{index $.table_headers $i}}">
+          <label for="ad{{$field}}">{{index $.table_headers $i}}</label>
         </div>
+        {{end}}
         {{$i = add $i 1}}
         {{end}}
       </div>

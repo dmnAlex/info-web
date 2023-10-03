@@ -19,7 +19,7 @@
       {{range $entity := .table_data}}
       <tr>
         <td class="align-middle">{{$n}}</td>
-        {{range getFieldsValue $entity}}
+        {{range getFieldValues $entity}}
         <td class="align-middle">{{.}}</td>
         {{end}}
         {{if eq $.table_type "function"}}
@@ -30,11 +30,12 @@
         {{else if eq $.table_type "data"}}
         <td class="text-end">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDialog"
-            onclick="preparePeerEditDialog('{{getFieldsValue $entity}}')" style="min-width: 46px;"><i
+            onclick="preparePeerEditDialog('{{getFieldValues $entity}}')" style="min-width: 46px;"><i
               class="fa fa-pencil fa-fw"></i>
           </button>
           <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteDialog"
-            onclick="$('#delDialogEntityID').val('{{$entity.ID}}')" style="min-width: 46px;"><i class="fas fa-trash"></i>
+            onclick="$('#delDialogEntityID').val('{{getPrimaryKeyValue $entity}}')" style="min-width: 46px;"><i
+              class="fas fa-trash"></i>
           </button>
         </td>
         {{else}}
@@ -53,7 +54,7 @@
     let data_array = data.split(" ");
     let inputs = $("#editDialog input");
     inputs.each(function (i, elem) {
-      elem.value = data_array[i + 1];
+      elem.value = data_array[i];
     })
   }
 </script>
