@@ -3,25 +3,23 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addDialogCenterTitle">Добавление записи</h5>
+        <h5 class="modal-title" id="addDialogCenterTitle">Addition</h5>
       </div>
       <div class="modal-body">
-        {{$i := 0}}
-        {{range $field := .object_fields}}
-        {{ if ne $field "id"}}
+        {{range $field := .table_headers}}
+        {{ if ne $field "ID"}}
         <div class="form-floating mb-3">
-          <input class="form-control" id="ad{{$field}}" name="{{$field}}" type="text"
-            placeholder="{{index $.table_headers $i}}">
-          <label for="ad{{$field}}">{{index $.table_headers $i}}</label>
+          <input class="form-control" id="ad{{$field}}" name="{{toLowerCase $field}}" type="text"
+            placeholder="{{$field}}">
+          <label for="ad{{$field}}">{{$field}}</label>
         </div>
         {{end}}
-        {{$i = add $i 1}}
         {{end}}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Отменить</button>
+        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" style="min-width: 118px;"
-          onclick="sendAddRequest('{{.endpoint}}')">Добавить</button>
+          onclick="sendAddRequest('{{.endpoint}}')">Add</button>
       </div>
     </div>
   </div>

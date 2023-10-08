@@ -4,23 +4,23 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteDialogCenterTitle">Удаление записи</h5>
+        <h5 class="modal-title" id="deleteDialogCenterTitle">Deletion</h5>
       </div>
       <div class="modal-body">
-        <p>Вы уверены, что хотите удалить запись?</p>
+        <p>Are you sure you want to delete the entry?</p>
         <input id="delDialogEntityID" type="hidden" name="id" value="">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Нет</button>
+        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">No</button>
         <button type="button" class="btn btn-primary" style="min-width: 118px;"
-          onclick="removeEntry('{{.endpoint}}')">Да</button>
+          onclick="sendDeleteRequest('{{.endpoint}}')">Yes</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  function removeEntry(url) {
+  function sendDeleteRequest(url) {
     jQuery.ajax({
       url: url + '?' + $.param({ "id": $("#delDialogEntityID").val() }),
       method: 'DELETE',

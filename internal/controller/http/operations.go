@@ -4,7 +4,12 @@ import (
 	"net/http"
 
 	"github.com/dsnikitin/info-web/internal/entity"
+	"github.com/dsnikitin/info-web/internal/pkg/tools"
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	operationsEndpoint = "/operations"
 )
 
 type OperationUseCase interface {
@@ -19,13 +24,13 @@ func NewOperations(uc OperationUseCase) *Operations {
 }
 
 func (os *Operations) GetAll(ctx *gin.Context) {
+	var e entity.Operation
 	operations := os.uc.GetAllOperations()
 	ginMap := &gin.H{
-		"endpoint":      peersEndpoint,
-		"object_fields": []string{"id", "name", "lngname", "kind", "argnumber", "returntype", "inargs", "allargs", "argmodes", "argnames"},
-		"table_title":   "Операции",
+		"endpoint":      operationsEndpoint,
+		"table_title":   "Operations",
 		"table_data":    operations,
-		"table_headers": []string{"OID", "Название", "Язык", "Тип", "Агрументы", "Тип возврата", "Типы сигнатуры", "Типы всех аргументов", "Режим аргументов", "Название агрументов"},
+		"table_headers": tools.GetFieldNames(e),
 		"table_type":    "function",
 	}
 	ctx.HTML(http.StatusOK, "operations", ginMap)

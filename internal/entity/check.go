@@ -6,7 +6,3 @@ type Check struct {
 	Task string `json:"task" form:"task" csv:"task"`
 	Date string `json:"date" form:"date" csv:"date" gorm:"column:Date;type:time"`
 }
-
-func (Check) GetRussianFieldNames() []string {
-	return []string{"ID", "Ник студента", "Название задания", "Дата проверки"}
-}

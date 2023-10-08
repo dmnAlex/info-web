@@ -11,7 +11,3 @@ type TimeTracking struct {
 func (TimeTracking) TableName() string {
 	return "timetracking"
 }
-
-func (TimeTracking) GetRussianFieldNames() []string {
-	return []string{"ID", "Ник студента", "Дата", "Время", "Статус"}
-}

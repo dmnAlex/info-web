@@ -10,7 +10,3 @@ type Points struct {
 func (Points) TableName() string {
 	return "transferredpoints"
 }
-
-func (Points) GetRussianFieldNames() []string {
-	return []string{"ID", "Проверяющий", "Проверяемый", "Количество поинтов"}
-}

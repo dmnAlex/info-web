@@ -16,25 +16,36 @@ func NewDataManager[E entity.Entity](db *gorm.DB) *DataManager[E] {
 	return &DataManager[E]{db: db}
 }
 
-func (r *DataManager[E]) Create(e *E) error {
-	if err := r.db.Create(e).Error; err != nil {
+func (m *DataManager[E]) Create(e *E) error {
+	if err := m.db.Create(e).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (r *DataManager[E]) ReadAll() []E {
-	var es []E
-	r.db.Find(&es)
-	return es
+func (m *DataManager[E]) ReadAll() ([]E, error) {
+	var entities []E
+	if err := m.db.Find(&entities).Error; err != nil {
+		return entities, err
+	}
+
+	return entities, nil
 }
 
-func (r *DataManager[E]) Update(e *E) {
-	r.db.Save(e)
+func (m *DataManager[E]) Update(e *E) error {
+	if err := m.db.Save(e).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (r *DataManager[E]) Delete(id string) {
+func (m *DataManager[E]) Delete(id string) error {
 	var e E
-	r.db.Where(tools.GetPrimaryKeyName(e)+" = ?", id).Delete(e)
+	if err := m.db.Where(tools.GetPrimaryKeyName(e)+" = ?", id).Delete(e).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -4,38 +4,38 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editDialogCenterTitle">Изменение</h5>
+        <h5 class="modal-title" id="editDialogCenterTitle">Modification</h5>
       </div>
       <div class="modal-body">
         {{$i := 0}}
-        {{range $field := .object_fields}}
-        {{if eq $field "id"}}
+        {{range $field := .table_headers}}
+        {{if eq $field "ID"}}
         <input type="hidden" name="id" value="">
         {{else if eq $i 0}}
         <div class="form-floating mb-3">
-          <input class="form-control" id="ed{{$field}}" name="{{$field}}" type="text" disabled>
-          <label for="ed{{$field}}">{{index $.table_headers $i}}</label>
+          <input class="form-control" id="ed{{$field}}" name="{{toLowerCase $field}}" type="text" disabled>
+          <label for="ed{{$field}}">{{$field}}</label>
         </div>
         {{else}}
         <div class="form-floating mb-3">
-          <input class="form-control" id="ed{{$field}}" name="{{$field}}" type="text">
-          <label for="ed{{$field}}">{{index $.table_headers $i}}</label>
+          <input class="form-control" id="ed{{$field}}" name="{{toLowerCase $field}}" type="text">
+          <label for="ed{{$field}}">{{$field}}</label>
         </div>
         {{end}}
         {{$i = add $i 1}}
         {{end}}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Отменить</button>
+        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" style="min-width: 118px;"
-          onclick="sendUpdatePeerRequest('{{.endpoint}}')">Изменить</button>
+          onclick="sendUpdateRequest('{{.endpoint}}')">Modify</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  function sendUpdatePeerRequest(url) {
+  function sendUpdateRequest(url) {
     let inputs = $("#editDialog input");
     let map = new Map()
     inputs.each(function (i, elem) {

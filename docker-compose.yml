@@ -1,21 +1,21 @@
 services:
   db:
-    build:
-      context: .
-      dockerfile: Dockerfile.db
+    image: postgres:latest
+    env_file:
+      - .env
+    volumes:
+      - ./migrate:${DATA_PATH}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER}"]
       interval: 10s
       timeout: 10s
       retries: 3
   
   webapp:
+    env_file:
+      - .env
     environment:
       PGHOST: db
-      PGPORT: 5432
-      PGDATABASE: postgres
-      PGUSER: postgres
-      PGPASSWORD: postgres
     build:
       context: .
       dockerfile: Dockerfile.webapp
@@ -25,11 +25,13 @@ services:
     restart: always
   
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
+    image: nginx:latest
+    env_file:
+      - .env
+    volumes:
+      - ./nginx:/etc/nginx
     ports:
-      - "9060:80"
+      - "${APPPORT}:80"
     depends_on:
       - webapp
     restart: always

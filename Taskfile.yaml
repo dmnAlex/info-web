@@ -1,18 +1,8 @@
 version: '3'
 
-env:
-  BUILD_DIR: build
-  PGDATABASE: postgres
-  PGUSER: postgres
-  PGPASSWORD: postgres
+dotenv: ['.env']
 
 tasks:
-  run:
-    desc: Run the application during development.
-    env:
-      PGHOST: localhost
-    cmds:
-      - go run ./cmd/info-web
   build:
     desc: Build the application
     cmds:
@@ -21,8 +11,14 @@ tasks:
     desc: Clean build files.
     cmds:
       - rm -rf '{{.BUILD_DIR}}'
+  run:
+    desc: Run the application during development.
+    env:
+      PGHOST: localhost
+    cmds:
+      - go run ./cmd/info-web
   migrate:
-    desc: Migrate database.
+    desc: Migrate database during development.
     env:
       PGHOST: localhost
       DATA_PATH: '{{.TASKFILE_DIR}}/migrate'

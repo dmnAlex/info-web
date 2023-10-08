@@ -41,10 +41,14 @@ func GetFieldNames(s interface{}) []string {
 
 	out := make([]string, 0, v.NumField())
 	for i := 0; i < v.NumField(); i++ {
-		out = append(out, strings.ToLower(v.Type().Field(i).Name))
+		out = append(out, v.Type().Field(i).Name)
 	}
 
 	return out
+}
+
+func ToLowerCase(str string) string {
+	return strings.ToLower(str)
 }
 
 // returns the value of struct's primary key

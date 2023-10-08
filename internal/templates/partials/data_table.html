@@ -1,15 +1,17 @@
 {{define "data_table"}}
 <div class="card-header">
   <i class="fas fa-list me-1"></i>
-  {{.table_title}}
+  {{.title}}
 </div>
 <div class="card-body">
   <table class="table table-hover">
     <thead>
       <tr>
         <th class="align-middle">№</th>
-        {{range .table_headers}}
-        <th class="align-middle">{{.}}</th>
+        {{range $header := .table_headers}}
+        {{if ne $header "ID"}}
+        <th class="align-middle">{{$header}}</th>
+        {{end}}
         {{end}}
         <th class="col-2 align-middle"></th>
       </tr>
@@ -19,16 +21,19 @@
       {{range $entity := .table_data}}
       <tr>
         <td class="align-middle">{{$n}}</td>
-        {{range getFieldValues $entity}}
-        <td class="align-middle">{{.}}</td>
+        {{range $i, $v := getFieldValues $entity}}
+        {{$header := index $.table_headers $i}}
+        {{if ne $header "ID" }}
+        <td class="align-middle">{{$v}}</td>
+        {{end}}
         {{end}}
         {{if eq $.table_type "function"}}
-        <td class="text-end">
+        <td class="text-end align-middle">
           <button type="button" class="btn btn-primary" data-toggle="modal" style="min-width: 46px;"><i
               class="fa fa-pencil fa-wrench"></i>
         </td>
         {{else if eq $.table_type "data"}}
-        <td class="text-end">
+        <td class="text-end align-middle">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editDialog"
             onclick="preparePeerEditDialog('{{getFieldValues $entity}}')" style="min-width: 46px;"><i
               class="fa fa-pencil fa-fw"></i>

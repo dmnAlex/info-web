@@ -5,7 +5,3 @@ type Recommendations struct {
 	Peer            string `json:"peer" form:"peer" csv:"peer"`
 	RecommendedPeer string `json:"recommendedpeer" form:"recommendedpeer" csv:"recommendedpeer" gorm:"column:recommendedpeer"`
 }
-
-func (Recommendations) GetRussianFieldNames() []string {
-	return []string{"ID", "Ник студента", "Ник рекоммендуемого"}
-}

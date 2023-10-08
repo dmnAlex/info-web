@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -76,7 +77,7 @@ func Run() {
 	initTemplates(engine)
 	initRoutes(engine, handlers)
 
-	engine.Run(":9060")
+	engine.Run(fmt.Sprintf(":%v", os.Getenv("APPPORT")))
 }
 
 func initRepositories(db *gorm.DB) *Repositories {
@@ -149,6 +150,7 @@ func initTemplates(gin *gin.Engine) {
 		"add":                tools.Add,
 		"getFieldValues":     tools.GetFieldValues,
 		"getPrimaryKeyValue": tools.GetPrimaryKeyValue,
+		"toLowerCase":        tools.ToLowerCase,
 	})
 	gin.LoadHTMLFiles(templates...)
 	gin.Static("/internal/assets", "internal/assets")

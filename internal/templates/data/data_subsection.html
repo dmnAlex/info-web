@@ -1,4 +1,4 @@
-{{define "points"}}
+{{define "data_subsection"}}
 {{template "top" .}}
 {{template "add_dialog" .}}
 {{template "edit_dialog" .}}
@@ -9,21 +9,21 @@
   <div id="layoutSidenav_content">
     <main>
       <div class="container-fluid p-5">
-        <h1 class="display-4">Поинты</h1>
+        <h1 class="display-4">{{.title}}</h1>
         <ol class="breadcrumb mb-4">
-          <li class="breadcrumb-item"><a href="/">Главная</a></li>
-          <li class="breadcrumb-item"><a href="/data">Данные</a></li>
-          <li class="breadcrumb-item active">Поинты</li>
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><a href="/data">Data</a></li>
+          <li class="breadcrumb-item active">{{.title}}</li>
         </ol>
         <hr class="my-4">
         <div class="text-end mb-2">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDialog"
             style="min-width: 118px;"><i class="fas fa-plus"></i>
-            Добавить
+            Add
           </button>
           {{template "load_buttons" .}}
         </div>
-        <div id="dataTable" class="table-responsive card mb-4">
+        <div id="dataTable" class="card mb-4 table-responsive">
           {{template "data_table" .}}
         </div>
       </div>
@@ -34,5 +34,4 @@
 <div class="modal fade" id="errorDialog" tabindex="-1" role="dialog" aria-labelledby="errorDialogCenterTitle"
   aria-hidden="true"></div>
 {{template "bottom" .}}
-
 {{end}}
