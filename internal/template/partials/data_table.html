@@ -29,8 +29,8 @@
         {{end}}
         {{if eq $.table_type "function"}}
         <td class="text-end align-middle">
-          <button type="button" class="btn btn-primary" data-toggle="modal" style="min-width: 46px;"><i
-              class="fa fa-pencil fa-wrench"></i>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#callDialog{{$entity.ID}}" style="min-width: 46px;"><i
+              class="fa fa-play"></i>
         </td>
         {{else if eq $.table_type "data"}}
         <td class="text-end align-middle">

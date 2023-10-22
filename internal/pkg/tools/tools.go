@@ -1,6 +1,9 @@
 package tools
 
 import (
+	"log"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 )
@@ -80,4 +83,20 @@ func GetPrimaryKeyName(s interface{}) string {
 	}
 
 	return out
+}
+
+func GetAllTemplates() []string {
+	templates := make([]string, 0)
+	err := filepath.Walk("internal/template/", func(path string, info os.FileInfo, err error) error {
+		if err == nil && !info.IsDir() {
+			templates = append(templates, path)
+		}
+		return err
+	})
+
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	return templates
 }

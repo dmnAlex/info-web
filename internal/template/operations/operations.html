@@ -1,6 +1,11 @@
 {{define "operations"}}
 {{template "top" .}}
 {{template "nav_bar" .}}
+
+{{range .table_data}}
+  {{template "call_dialog" .}}
+{{end}}
+
 <div id="layoutSidenav">
   {{template "operations_sidebar" .}}
   <div id="layoutSidenav_content">

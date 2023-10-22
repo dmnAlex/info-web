@@ -1,0 +1,39 @@
+{{define "load_buttons"}}
+<button type="button" class="btn btn-secondary file" style="min-width: 118px;" onclick="exportData('{{.endpoint}}')"><i
+    class="fas fa-upload"></i>
+  Export
+</button>
+<button type="button" class="btn btn-secondary" style="min-width: 118px;"><i class="fas fa-download"></i>
+  Import
+</button>
+<script>
+  function exportData(url) {
+    jQuery.ajax({
+      url: url + '/export',
+      method: 'GET',
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: function (data) {
+        var a = document.createElement('a');
+        var url = window.URL.createObjectURL(data);
+        a.href = url;
+        a.download = 'export.csv';
+        document.body.append(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      },
+      error: function (jqXHR) {
+        if (jqXHR.status === 500 || jqXHR.status === 400) {
+          document.write(jqXHR.responseText)
+        } else {
+          console.log(jqXHR.responseText)
+          $('#errorDialog').html(jqXHR.responseText);
+          $('#errorDialog').modal('show');
+        }
+      }
+    });
+  }
+</script>
+{{end}}

@@ -1,11 +1,13 @@
 package http
 
 import (
+	"encoding/csv"
 	"log"
 	"net/http"
 
 	"github.com/dsnikitin/info-web/internal/entity"
 	"github.com/dsnikitin/info-web/internal/pkg/tools"
+	"github.com/dsnikitin/info-web/internal/template"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +16,8 @@ type DataSubsectionUseCase[E entity.Entity] interface {
 	Create(e *E) error
 	Update(e *E) error
 	Delete(id string) error
+	Export() ([][]string, error)
+	// Import()
 }
 
 type DataSubsection[E entity.Entity] struct {
@@ -24,60 +28,86 @@ func NewDataSubsection[E entity.Entity](uc DataSubsectionUseCase[E]) *DataSubsec
 	return &DataSubsection[E]{uc: uc}
 }
 
-func (d *DataSubsection[E]) GetAllEntities(ctx *gin.Context) {
-	if entities, err := d.uc.GetAll(); err != nil {
-		ctx.HTML(http.StatusAlreadyReported, errDialogTemplate, gin.H{"message": err.Error()})
+func (ds *DataSubsection[E]) GetAllEntities(ctx *gin.Context) {
+	if entities, err := ds.uc.GetAll(); err != nil {
+		ctx.HTML(http.StatusInternalServerError, template.InternalServerError, "")
 	} else {
-		content := d.preparePageContent(entities)
-		ctx.HTML(http.StatusOK, subsectionTemplate, content)
+		content := ds.preparePageContent(entities)
+		ctx.HTML(http.StatusOK, template.DataSubsection, content)
 	}
 }
 
-func (d *DataSubsection[E]) CreateEntity(ctx *gin.Context) {
+func (ds *DataSubsection[E]) CreateEntity(ctx *gin.Context) {
 	var e E
-	if err := ctx.Bind(&e); err != nil {
-		// todo вернуть страницу bad request
+	if err := ctx.ShouldBindJSON(&e); err != nil {
+		ctx.HTML(http.StatusBadRequest, template.BadRequest, "")
 		log.Println(err)
 		return
 	}
 
-	if err := d.uc.Create(&e); err != nil {
-		ctx.HTML(http.StatusAlreadyReported, errDialogTemplate, gin.H{"message": err.Error()})
+	if err := ds.uc.Create(&e); err != nil {
+		ctx.HTML(http.StatusUnprocessableEntity, template.ErrDialog, gin.H{"message": err.Error()})
 	} else {
-		d.sendUpdatedTable(ctx)
+		ds.sendUpdatedTable(ctx)
 	}
 }
 
-func (d *DataSubsection[E]) UpdateEntity(ctx *gin.Context) {
+func (ds *DataSubsection[E]) UpdateEntity(ctx *gin.Context) {
 	var e E
-	if err := ctx.Bind(&e); err != nil {
-		// todo вернуть страницу bad request
+	if err := ctx.ShouldBindJSON(&e); err != nil {
+		ctx.HTML(http.StatusBadRequest, template.BadRequest, "")
 		log.Println(err)
 		return
 	}
 
-	if err := d.uc.Update(&e); err != nil {
-		ctx.HTML(http.StatusAlreadyReported, errDialogTemplate, gin.H{"message": err.Error()})
+	if err := ds.uc.Update(&e); err != nil {
+		ctx.HTML(http.StatusUnprocessableEntity, template.ErrDialog, gin.H{"message": err.Error()})
 	} else {
-		d.sendUpdatedTable(ctx)
+		ds.sendUpdatedTable(ctx)
 	}
 }
 
-func (d *DataSubsection[E]) DeleteEntity(ctx *gin.Context) {
+func (ds *DataSubsection[E]) DeleteEntity(ctx *gin.Context) {
 	id := ctx.Query("id")
-	if err := d.uc.Delete(id); err != nil {
-		ctx.HTML(http.StatusAlreadyReported, errDialogTemplate, gin.H{"message": err.Error()})
-	} else {
-		d.sendUpdatedTable(ctx)
+	if id == "" {
+		ctx.HTML(http.StatusBadRequest, template.BadRequest, "")
+		log.Println("")
+		return
 	}
+
+	if err := ds.uc.Delete(id); err != nil {
+		ctx.HTML(http.StatusUnprocessableEntity, template.ErrDialog, gin.H{"message": err.Error()})
+	} else {
+		ds.sendUpdatedTable(ctx)
+	}
+}
+
+func (ds *DataSubsection[E]) ExportData(ctx *gin.Context) {
+	data, err := ds.uc.Export()
+	if err != nil {
+		ctx.HTML(http.StatusInternalServerError, template.InternalServerError, "")
+		return
+	}
+
+	ctx.Header("Content-Type", "text/csv")
+
+	wr := csv.NewWriter(ctx.Writer)
+	if err := wr.WriteAll(data); err != nil {
+		ctx.HTML(http.StatusInternalServerError, template.InternalServerError, "")
+		return
+	}
+}
+
+func (ds *DataSubsection[E]) ImportData(ctx *gin.Context) {
+
 }
 
 func (d *DataSubsection[E]) sendUpdatedTable(ctx *gin.Context) {
 	if entities, err := d.uc.GetAll(); err != nil {
-		ctx.HTML(http.StatusAlreadyReported, errDialogTemplate, gin.H{"message": err.Error()})
+		ctx.HTML(http.StatusInternalServerError, template.InternalServerError, "")
 	} else {
 		content := d.prepareTableContent(entities)
-		ctx.HTML(http.StatusOK, tableTemplate, content)
+		ctx.HTML(http.StatusOK, template.Table, content)
 	}
 }
 
@@ -86,34 +116,34 @@ func (d *DataSubsection[E]) preparePageContent(entities []E) *gin.H {
 	var endpoint, title string
 	switch any(e).(type) {
 	case entity.Peer:
-		endpoint = peersEndpoint
+		endpoint = PeersEndpoint
 		title = "Peers"
 	case entity.Friends:
-		endpoint = friendsEndpoint
+		endpoint = FriendsEndpoint
 		title = "Friends"
 	case entity.Recommendations:
-		endpoint = recommendationsEndpoint
+		endpoint = RecommendationsEndpoint
 		title = "Recommendations"
 	case entity.Task:
-		endpoint = tasksEndpoint
+		endpoint = TasksEndpoint
 		title = "Tasks"
 	case entity.XP:
-		endpoint = xpEndpont
+		endpoint = XPEndpont
 		title = "XP"
 	case entity.Points:
-		endpoint = pointsEndpoint
+		endpoint = PointsEndpoint
 		title = "Transferred points"
 	case entity.Check:
-		endpoint = checksEndpoint
+		endpoint = ChecksEndpoint
 		title = "Checks"
 	case entity.P2P:
-		endpoint = p2pEndpoint
+		endpoint = P2PEndpoint
 		title = "P2P checks"
 	case entity.Verter:
-		endpoint = verterEndpoint
+		endpoint = VerterEndpoint
 		title = "Verter's checks"
 	case entity.TimeTracking:
-		endpoint = timeTrackingEndpoint
+		endpoint = TimeTrackingEndpoint
 		title = "Time tracking"
 	}
 

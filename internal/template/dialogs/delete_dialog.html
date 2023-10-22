@@ -25,16 +25,19 @@
       url: url + '?' + $.param({ "id": $("#delDialogEntityID").val() }),
       method: 'DELETE',
       dataType: 'html',
-      success: function (data, textStatus, jqXHR) {
-        if (jqXHR.status === 200) {
-          $('#dataTable').html(data);
-          $('#deleteDialog').modal('hide');
-        } else if (jqXHR.status !== 200) {
-          $("#errorDialog").html(data);
+      success: function (data) {
+        $('#dataTable').html(data);
+        $('#deleteDialog').modal('hide');
+      },
+      error: function (jqXHR) {
+        if (jqXHR.status === 500 || jqXHR.status === 400) {
+          document.write(jqXHR.responseText)
+        } else {
+          $("#errorDialog").html(jqXHR.responseText);
           $('#deleteDialog').modal('hide');
           $('#errorDialog').modal('show');
         }
-      },
+      }
     });
   }
 </script>

@@ -1,6 +1,11 @@
 package usecase
 
-import "github.com/dsnikitin/info-web/internal/entity"
+import (
+	"fmt"
+
+	"github.com/dsnikitin/info-web/internal/entity"
+	"github.com/dsnikitin/info-web/internal/pkg/tools"
+)
 
 type DataSubsectionRepository[E entity.Entity] interface {
 	Create(e *E) error
@@ -31,4 +36,25 @@ func (uc *DataSubsection[E]) Update(e *E) error {
 
 func (uc *DataSubsection[E]) Delete(id string) error {
 	return uc.repo.Delete(id)
+}
+
+func (uc *DataSubsection[E]) Export() ([][]string, error) {
+	entities, err := uc.repo.ReadAll()
+	if err != nil {
+		return [][]string{}, err
+	}
+
+	var e E
+	data := make([][]string, 0, len(entities)+1)
+	data = append(data, tools.GetFieldNames(e)) // Header
+	for _, entity := range entities {
+		values := tools.GetFieldValues(entity)
+		valuesStr := make([]string, 0, len(values))
+		for i := range values {
+			valuesStr = append(valuesStr, fmt.Sprintf("%v", values[i]))
+		}
+		data = append(data, valuesStr) // Items
+	}
+
+	return data, nil
 }

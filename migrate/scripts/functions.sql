@@ -12,7 +12,7 @@ CREATE PROCEDURE prc_add_p2p_check(p_checked_peer VARCHAR,
                                    p_time TIME)
 AS $$
 DECLARE                      
-  p_check_other_id INTEGER := (
+  p_check_other_id BIGINT := (
                                 SELECT Checks.id
                                 FROM Checks
                                 INNER JOIN P2P
@@ -23,8 +23,8 @@ DECLARE
                                 GROUP BY Checks.id
                                 HAVING COUNT(P2P.state) = 1
                               );
-  p_check_max_id INTEGER := (SELECT COALESCE(MAX(ID) + 1, 1) FROM Checks);
-  p_check_start_id INTEGER := (SELECT COALESCE(p_check_other_id, p_check_max_id));
+  p_check_max_id BIGINT := (SELECT COALESCE(MAX(ID) + 1, 1) FROM Checks);
+  p_check_start_id BIGINT := (SELECT COALESCE(p_check_other_id, p_check_max_id));
 BEGIN
   IF p_state = 'Start' THEN
     INSERT INTO Checks 
@@ -48,7 +48,7 @@ CREATE PROCEDURE prc_add_verter_check(p_checked_peer VARCHAR,
                                       p_time TIME)
 AS $$
 DECLARE
-last_success_check_id INTEGER :=  (
+last_success_check_id BIGINT :=  (
                                     SELECT Checks.ID
                                     FROM Checks 
                                     INNER JOIN P2P 
@@ -154,7 +154,7 @@ CREATE FUNCTION fnc_transferred_points_readable()
 RETURNS TABLE (
   Peer1 VARCHAR,
   Peer2 VARCHAR,
-  PointsAmount INTEGER
+  PointsAmount BIGINT
 )
 LANGUAGE SQL
 AS $$
@@ -200,7 +200,7 @@ RETURNS TABLE
 (
   Peer VARCHAR,
   Task VARCHAR,
-  XP INTEGER
+  XP BIGINT
 )
 LANGUAGE SQL
 AS $$
@@ -552,13 +552,13 @@ BEGIN
     )
   )
   SELECT 
-    (SELECT (COUNT(*) * 100.0 / total_peers.count)::integer 
+    (SELECT (COUNT(*) * 100.0 / total_peers.count)::BIGINT 
      FROM started_only_block1) AS "StartedBlock1",
-    (SELECT (COUNT(*) * 100.0 / total_peers.count)::integer 
+    (SELECT (COUNT(*) * 100.0 / total_peers.count)::BIGINT 
      FROM started_only_block2) AS "StartedBlock2",
-    (SELECT (COUNT(*) * 100.0 / total_peers.count)::integer 
+    (SELECT (COUNT(*) * 100.0 / total_peers.count)::BIGINT 
      FROM started_both_blocks) AS "StartedBothBlocks",
-    (SELECT (COUNT(*) * 100.0 / total_peers.count)::integer 
+    (SELECT (COUNT(*) * 100.0 / total_peers.count)::BIGINT 
      FROM didnt_start_any_block) AS "DidntStartAnyBlock"
   FROM
     (SELECT COUNT(*) AS count FROM peers) AS total_peers;
@@ -572,7 +572,7 @@ $$ LANGUAGE plpgsql;
     количество друзей.
 */
 DROP PROCEDURE IF EXISTS find_N_peers_with_max_friends;
-CREATE PROCEDURE find_N_peers_with_max_friends(peers_count INTEGER, 
+CREATE PROCEDURE find_N_peers_with_max_friends(peers_count BIGINT, 
                                                INOUT "cursor" REFCURSOR)
 AS $$
 BEGIN
@@ -606,8 +606,8 @@ AS $$
 BEGIN
   OPEN "cursor" FOR
   SELECT 
-    (successful_checks * 100.0 / total_checks)::integer AS "SuccessfulChecks", 
-    ((total_checks - successful_checks) * 100.0 / total_checks)::integer AS "UnsuccessfulChecks"
+    (successful_checks * 100.0 / total_checks)::BIGINT AS "SuccessfulChecks", 
+    ((total_checks - successful_checks) * 100.0 / total_checks)::BIGINT AS "UnsuccessfulChecks"
   FROM 
     (
       SELECT 
@@ -714,7 +714,7 @@ $$ LANGUAGE plpgsql;
 */
 DROP PROCEDURE IF EXISTS find_lucky_days_for_checks;
 CREATE PROCEDURE find_lucky_days_for_checks(
-	consecutive_checks INTEGER, INOUT "cursor" REFCURSOR
+	consecutive_checks BIGINT, INOUT "cursor" REFCURSOR
 )
 AS $$
 BEGIN
@@ -882,7 +882,7 @@ $$ LANGUAGE plpgsql;
 */
 DROP PROCEDURE IF EXISTS find_peers_with_N_early_visits;
 CREATE PROCEDURE find_peers_with_N_early_visits(
-  earlytime TIME, visitnum INTEGER, INOUT "cursor" REFCURSOR
+  earlytime TIME, visitnum BIGINT, INOUT "cursor" REFCURSOR
 )
 AS $$
 BEGIN
@@ -923,8 +923,8 @@ $$ LANGUAGE plpgsql;
 */
 DROP PROCEDURE IF EXISTS find_peers_who_left_campus_more_than_M_times_during_N_days;
 CREATE PROCEDURE 
-  find_peers_who_left_campus_more_than_M_times_during_N_days(deptnum INTEGER, 
-                                                             daynum INTEGER, 
+  find_peers_who_left_campus_more_than_M_times_during_N_days(deptnum BIGINT, 
+                                                             daynum BIGINT, 
                                                              INOUT "cursor" REFCURSOR)
 AS $$
 BEGIN
@@ -986,7 +986,7 @@ $$ LANGUAGE plpgsql;
 */
 DROP PROCEDURE IF EXISTS find_peers_who_left_campus_for_N_minutes_yesterday;
 CREATE PROCEDURE 
-  find_peers_who_left_campus_for_N_minutes_yesterday(minnum INTEGER, 
+  find_peers_who_left_campus_for_N_minutes_yesterday(minnum BIGINT, 
                                                      INOUT "cursor" REFCURSOR)
 AS $$
 BEGIN

@@ -19,7 +19,7 @@ CREATE TABLE Tasks
     REFERENCES Tasks(Title)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  MaxXP INTEGER NOT NULL 
+  MaxXP BIGINT NOT NULL 
     CHECK (MaxXP > 0)
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE Checks
 CREATE TABLE P2P
 (
   ID SERIAL PRIMARY KEY,
-  "Check" INTEGER NOT NULL 
+  "Check" BIGINT NOT NULL 
     REFERENCES Checks(ID) 
     ON UPDATE CASCADE
     ON DELETE CASCADE,
@@ -72,7 +72,7 @@ CREATE TABLE TransferredPoints
     REFERENCES Peers(Nickname) 
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  PointsAmount INTEGER NOT NULL
+  PointsAmount BIGINT NOT NULL
     CHECK (PointsAmount > 0),
   CONSTRAINT ch_is_different_peers CHECK (CheckingPeer <> CheckedPeer)
 );
@@ -128,7 +128,7 @@ CREATE TABLE TimeTracking
 );
 
 -- Функция для таблицы Verter (проверка, что добавляемая проверка успешна на P2P этапе)
-CREATE FUNCTION is_p2p_success(check_id integer) RETURNS boolean 
+CREATE FUNCTION is_p2p_success(check_id BIGINT) RETURNS boolean 
 AS $$
 SELECT EXISTS (SELECT "Check"
                FROM p2p 
@@ -138,7 +138,7 @@ $$ LANGUAGE SQL;
 CREATE TABLE Verter
 (
   ID SERIAL PRIMARY KEY,
-  "Check" INTEGER NOT NULL 
+  "Check" BIGINT NOT NULL 
     REFERENCES Checks(ID)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
@@ -154,11 +154,11 @@ ON Verter ("Check", (State = 'Start'));
 CREATE TABLE XP
 (
   ID SERIAL PRIMARY KEY,
-  "Check" INTEGER NOT NULL
+  "Check" BIGINT NOT NULL
     REFERENCES Checks(ID)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  XPAmount INTEGER NOT NULL
+  XPAmount BIGINT NOT NULL
 );
 
 

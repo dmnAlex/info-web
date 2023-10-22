@@ -47,17 +47,19 @@
       url: url,
       method: 'PUT',
       dataType: 'html',
-      data: obj,
-      success: function (data, textStatus, jqXHR) {
-        if (jqXHR.status === 200) {
-          console.log(data)
-          $('#dataTable').html(data);
-          $('#editDialog').modal('hide');
-        } else if (jqXHR.status !== 200) {
-          $('#errorDialog').html(data);
+      data: JSON.stringify(obj),
+      success: function (data) {
+        $('#dataTable').html(data);
+        $('#editDialog').modal('hide');
+      },
+      error: function (jqXHR) {
+        if (jqXHR.status === 500 || jqXHR.status === 400) {
+          document.write(jqXHR.responseText)
+        } else {
+          $('#errorDialog').html(jqXHR.responseText);
           $('#errorDialog').modal('show');
         }
-      },
+      }
     });
   }
 </script>

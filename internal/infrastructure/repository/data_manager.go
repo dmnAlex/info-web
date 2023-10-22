@@ -25,8 +25,9 @@ func (m *DataManager[E]) Create(e *E) error {
 }
 
 func (m *DataManager[E]) ReadAll() ([]E, error) {
+	var e E
 	var entities []E
-	if err := m.db.Find(&entities).Error; err != nil {
+	if err := m.db.Order(tools.GetPrimaryKeyName(e)).Find(&entities).Error; err != nil {
 		return entities, err
 	}
 
@@ -34,7 +35,7 @@ func (m *DataManager[E]) ReadAll() ([]E, error) {
 }
 
 func (m *DataManager[E]) Update(e *E) error {
-	if err := m.db.Save(e).Error; err != nil {
+	if err := m.db.Model(&e).Updates(e).Error; err != nil {
 		return err
 	}
 

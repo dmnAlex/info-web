@@ -1,0 +1,58 @@
+{{define "call_dialog"}}
+<div class="modal fade" id="callDialog{{.ID}}" tabindex="-1" role="dialog" aria-labelledby="callDialogTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="callDialogCenterTitle{{.ID}}">{{.Name}}</h5>
+      </div>
+      <div class="modal-body">
+        {{if eq .Argnumber 0}}
+        No arguments
+        {{end}}
+        {{range $i, $argtype := .Inargs}}
+        <div class="form-floating mb-3">
+          <input class="form-control" id="{{$argtype}}" name="{{toLowerCase $argtype}}" type="text">
+          <label for="call{{$argtype}}">{{index $.Argnames $i}} ({{$argtype}})</label>
+        </div>
+        {{end}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" style="min-width: 118px;" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" style="min-width: 118px;" onclick="sendCallRequest('{{.ID}}', '{{.Name}}')">Call</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function sendCallRequest(id, functionName) {
+    let arguments = $(`#callDialog${id} input`)
+    arguments = arguments.map((_, item) => item.value).get()
+
+    const requestData = {
+      functionName,
+      arguments
+    }
+
+    const jsonData = JSON.stringify(requestData)
+
+    jQuery.ajax({
+      url: '/operations',
+      method: 'POST',
+      contentType: 'application/json',
+      data: jsonData,
+      // success: function (data, textStatus, jqXHR) {
+      //   if (jqXHR.status === 200) {
+      //     console.log(data)
+      //     $('#dataTable').html(data);
+      //     $('#editDialog').modal('hide');
+      //   } else if (jqXHR.status !== 200) {
+      //     $('#errorDialog').html(data);
+      //     $('#errorDialog').modal('show');
+      //   }
+      // },
+    });
+  }
+</script>
+{{end}}
