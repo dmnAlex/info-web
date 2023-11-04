@@ -59,4 +59,11 @@ func (os *Operations) RawRequest(ctx *gin.Context) {
 		return
 	}
 	fmt.Println(table) // TODO
+
+	ginMap := &gin.H{
+		"table_title":   "Result",
+		"table_data":    table.Rows,
+		"table_headers": table.Headers,
+	}
+	ctx.HTML(http.StatusOK, template.Result, ginMap)
 }

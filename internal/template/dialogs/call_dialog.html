@@ -42,6 +42,11 @@
       method: 'POST',
       contentType: 'application/json',
       data: jsonData,
+      success: function (response) {
+        $(`#callDialog${id}`).modal('hide')
+        $('#resultDialog #resultContent').html(response)
+        $('#resultDialog').modal('show')
+      }
       // success: function (data, textStatus, jqXHR) {
       //   if (jqXHR.status === 200) {
       //     console.log(data)

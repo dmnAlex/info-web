@@ -6,6 +6,7 @@ const (
 	Data                = "data"
 	DataSubsection      = "data_subsection"
 	Table               = "data_table"
+	Result              = "result_table"
 	ErrDialog           = "error_dialog"
 	BadRequest          = "bad_request.html"
 	InternalServerError = "internal_server_error.html"
